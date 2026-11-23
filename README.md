@@ -20,7 +20,7 @@ Edit content in `src/pages.mjs`, styles in `src/site.css`, the shared header/foo
 - Environment variable (optional): `NODE_VERSION=20`
 
 ## Numbers
-Eval numbers come from `GUARD_README.md` in the panel-guard worktree (fresh6/7/8). If a newer set becomes the headline, update `src/pages.mjs` (home stats and `/evals`).
+Action-firewall numbers come from `results/llm_report.md`, `results/claims_v2_report.md` and `results/eval/latency.json` in panel-firewall-public (test count from `pytest`). Support-bot numbers come from `GUARD_README.md` (fresh6/7/8). Update `src/pages.mjs` (home stats and `/evals`) when a newer set becomes the headline.
 
 ## Forms
 The design-partner application and early access are `mailto:` links with a prefilled body. The address is `EMAIL` in `src/pages.mjs`.

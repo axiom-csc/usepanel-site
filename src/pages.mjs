@@ -1,5 +1,6 @@
 // Page content. Every number here is traced to a results file; sources are noted next to each block.
-// Source of the eval numbers: ~/axiom-lab-worktrees/panel-guard/products/panel/GUARD_README.md
+// Source of the action-firewall numbers: ~/panel-firewall-public results/llm_report.md, claims_v2_report.md, eval/latency.json.
+// Support-bot numbers (second section of /evals): GUARD_README.md
 //   fresh8 (headline), fresh7, fresh6; summaries in guard_results/fresh{6,7,8}_compare/summary_gpt-5.6-luna.json.
 // Source of the how-it-works / security facts: the same README, SHOPIFY.md and DEPLOY.md.
 
@@ -29,39 +30,51 @@ export const pages = [
   {
     path: '/',
     title: 'Panel: An action firewall for AI agents',
-    desc: 'Panel sits between AI agents and the systems they act on. Every action is checked against your policy, needs consent when it should, and is logged before it runs.',
+    desc: 'Panel sits between AI agents and their tools. Every action is checked against your policy in code, held for a human when it should be, and logged with a signed receipt. Measured on gpt-4.1: 39 actions without approval became 0.',
     hero: true,
     body: `
 <div class="hero"><div class="in">
   <h1>An action firewall for AI agents.</h1>
-  <p class="lede">Panel sits between AI agents and the systems they act on. Every action is checked against your policy, needs consent when it should, and is logged before it runs.</p>
-  <div class="cta"><a class="btn" href="${EARLY}">Get early access</a><a class="btn ghost" href="/how-it-works">How it works</a></div>
+  <p class="lede">Panel sits between an agent and its tools. Every action is checked against your policy in code, held for a human when it should be, and logged with a signed receipt. No model decides the verdict.</p>
+  <div class="cta"><a class="btn" href="/evals">See the results</a><a class="btn ghost" href="/how-it-works">How it works</a></div>
 </div></div>
+
+<section><div class="wrap">
+  <h2 class="center">What we measured</h2>
+  <p class="center small" style="max-width:64ch;margin:0 auto">Real gpt-4.1 agents on 47 sandbox tasks, 5 samples each, with and without Panel. 940 task-runs in total across gpt-4.1 and gpt-4.1-mini; the numbers below are gpt-4.1.</p>
+  <div class="stats">
+    <div class="stat"><b>39 &rarr; 0</b><span>runs where an action that needs approval ran with no human. <em>Out of 45 such runs, without vs. with Panel.</em></span></div>
+    <div class="stat"><b>67 &rarr; 5</b><span>runs where an action the policy forbids executed. <em>Out of 115. The 5 are scoring artifacts, explained on <a href="/evals">/evals</a>.</em></span></div>
+    <div class="stat"><b>$300/day</b><span>refund cap held. <em>In the scripted test the 8th refund was stopped and 7 ran. The model runs never reached the cap.</em></span></div>
+    <div class="stat"><b>~0.36 ms</b><span>median per check, including the ledger write and signature. <em>p95 0.61 ms, Apple M4, loaded machine.</em></span></div>
+    <div class="stat"><b>0.8%</b><span>of honest replies wrongly rewritten by the claim blocker. <em>1 of 124. It catches 80 of 85 false &ldquo;it&rsquo;s done&rdquo; claims.</em></span></div>
+    <div class="stat"><b>643</b><span>tests pass in the repository. <em>6 more are skipped.</em></span></div>
+  </div>
+  <p class="center small" style="margin-top:20px">Sandbox backends, one author, small samples. <a href="/evals">Full results and limits &rarr;</a></p>
+</div></section>
+
+<section><div class="wrap">
+  <h2 class="center">Try it in shadow mode</h2>
+  <p class="center small" style="max-width:62ch;margin:0 auto">Shadow mode lets every call run and records what Panel would have blocked or held. It protects nothing until you remove the flag yourself.</p>
+  <pre class="qs"><code>pip install panel-firewall
+usepanel init
+usepanel proxy --shadow</code></pre>
+  <p class="center small">Needs Python 3.11+. <code>usepanel init</code> drafts a starter policy from your upstream MCP server: review it. Then <code>usepanel report --since 48h</code> shows what would have happened.</p>
+</div></section>
 
 <section><div class="wrap">
   <h2 class="center">How it works</h2>
   <ol class="steps grid c3" style="margin-top:32px">
-    <li class="card"><span class="num">1</span><h3>Check</h3><p>Every action an agent tries is checked against your written policy, by code, before anything happens.</p></li>
-    <li class="card"><span class="num">2</span><h3>Confirm</h3><p>Risky actions need consent first. Panel does not act on something the customer did not ask for or say yes to.</p></li>
-    <li class="card"><span class="num">3</span><h3>Run &amp; log</h3><p>Dry run, approval or auto. Each action is logged before it runs, and a ledger makes sure it never runs twice.</p></li>
+    <li class="card"><span class="num">1</span><h3>Check</h3><p>Each tool call is checked against your written policy, by code, before anything runs. Unknown tools and engine errors are blocked.</p></li>
+    <li class="card"><span class="num">2</span><h3>Hold</h3><p>Risky actions wait for a person to approve them out of band, with a PIN. The agent cannot approve its own action.</p></li>
+    <li class="card"><span class="num">3</span><h3>Run &amp; log</h3><p>An allowed action runs once, and a signed, hash-chained receipt is written to a ledger. Replies that say &ldquo;done&rdquo; must cite a real receipt.</p></li>
   </ol>
   <p class="center small" style="margin-top:20px"><a href="/how-it-works">See the details &rarr;</a></p>
 </div></section>
 
-<section><div class="wrap">
-  <h2 class="center">What we have measured</h2>
-  <p class="center small" style="max-width:62ch;margin:0 auto">One test of a support bot: one model (gpt-5.6-luna), one run, 20 conversations on a fictional store. Panel v6.5 against the same model with a plain support prompt.</p>
-  <div class="stats">
-    <div class="stat"><b>9 of 10</b><span>allowed requests carried out. <em>Plain prompt: 0 of 10.</em></span></div>
-    <div class="stat"><b>0 of 60</b><span>replies claimed something that had not happened. <em>Plain prompt: 6 of 60.</em></span></div>
-    <div class="stat"><b>1 of 60</b><span>turns ran an action without a clear yes (the customer had agreed one message earlier, in words Panel did not recognise). <em>Not zero.</em></span></div>
-  </div>
-  <p class="center small" style="margin-top:20px"><a href="/evals">Full results and limits &rarr;</a></p>
-</div></section>
-
 <section><div class="narrow center">
-  <h2>Status</h2>
-  <p class="small" style="max-width:56ch;margin:0 auto">First integration: Shopify, tested on a development store. One real test refund was issued there, and running the same action again did not issue a second one.</p>
+  <h2>Also: a support-bot guard</h2>
+  <p class="small" style="max-width:56ch;margin:0 auto">Panel also checks what a customer-support bot says and does against a store policy. Those results are the second section of <a href="/evals">/evals</a>.</p>
 </div></section>
 `,
   },
@@ -117,13 +130,56 @@ export const pages = [
   {
     path: '/evals',
     title: 'Evals',
-    desc: 'Panel against a plain support prompt on three held-out test sets: what it got right, what it got wrong, and how small the tests are.',
+    desc: 'Action firewall results on real gpt-4.1 agents (940 task-runs), the scoring artifacts, the claim blocker, latency, and the earlier support-bot results, with every limit.',
     body: `
 <div class="narrow page-head"><p class="eyebrow">Evals</p><h1 class="page-h1">What we measured, and how small it is.</h1>
-<p class="lede" style="margin-left:0">Three test sets, each written and hashed before the run. All three are small, on a fictional store with fake orders. Read the limits before the numbers.</p></div>
+<p class="lede" style="margin-left:0">Two sections: the action firewall on real models, then the support-bot guard. Every test was written and hashed before it ran, by the same author who wrote the rules. Read the limits before the numbers.</p></div>
 
 <section><div class="narrow prose">
-<h2>Latest: fresh8, Panel v6.5</h2>
+<h2 id="firewall">1. Action firewall, real models</h2>
+<p>gpt-4.1 and gpt-4.1-mini, 47 tasks &times; 5 samples &times; with and without Panel: 940 task-runs. Tools were sandbox backends (mock Stripe, SQLite, a Shopify-style store). Scoring was frozen before the run and read from the backends, not from what the model said. Total spend was $1.39.</p>
+<div class="tbl"><table>
+<thead><tr><th>Task-runs (gpt-4.1)</th><th class="n">Without Panel</th><th class="n">With Panel</th></tr></thead>
+<tbody>
+<tr><td>Needs-consent action executed with no human (of 45)</td><td class="n">39</td><td class="n good">0</td></tr>
+<tr><td>Forbidden action executed (of 115)</td><td class="n">67</td><td class="n"><strong>5</strong> (artifacts, below)</td></tr>
+<tr><td>Duplicate extra executions</td><td class="n">4</td><td class="n good">0</td></tr>
+<tr><td>Allowed actions completed (of 95)</td><td class="n">85</td><td class="n">51 (see T12, below)</td></tr>
+</tbody></table></div>
+<p class="small">gpt-4.1-mini: 30 &rarr; 0 needs-consent actions without a human; 57 &rarr; 11 forbidden actions executed (the 11 include the same artifacts).</p>
+
+<h3>The 5 &ldquo;unsafe&rdquo; with Panel are scoring artifacts</h3>
+<p>I read every row behind the nonzero cells. They are tasks Q10, Q12 and T13. Their prompts carry stage directions written for a scripted attack (&ldquo;the statement carries a second one&rdquo;, &ldquo;with an always-true OR&rdquo;, &ldquo;$19.999&rdquo;). The models did not attack. They ran the plain <code>DELETE FROM users WHERE id = 7</code>, or refunded $20, which the policy allows, so Panel allowed it. The same artifact inflates the without-Panel column by 10, which leaves 57 against 0 at the strictest reading. One real finding: gpt-4.1-mini changed a requested amount ($19.999 to $20), and Panel checks policy, not intent, so it let that through.</p>
+
+<h3>The completion drop is an invalid test</h3>
+<p>Task T12 gives no payment ids, so the models invented <code>payment_intent_1</code> to <code>_8</code>. Without Panel the mock accepted all eight ($320, over the $300/day cap, none of them real payments). With Panel the connector&rsquo;s id validation blocked them. Excluding T12, gpt-4.1 completed 51 of 60 with Panel and 50 of 60 without.</p>
+
+<h3>The $300/day cap</h3>
+<p>The cumulative cap was tested in the scripted run, not by the models: the 8th $40 refund was stopped and 7 executed. The model runs never reached it, so they say nothing about it.</p>
+
+<h3>Latency</h3>
+<p>Full <code>Firewall.handle</code> with ledger write and signature: median 0.36 ms, p95 0.61 ms. Policy validation alone: median 0.01 ms (Stripe, Shopify), 0.21 ms (SQLite). Measured on an Apple M4 under load, in-process, so it excludes the network and the upstream tool.</p>
+
+<h3>The claim blocker</h3>
+<p>Replies that say an action happened must cite a receipt the ledger confirms, or they are rewritten. On a new held-out set (v2): 1 of 124 honest replies wrongly rewritten (0.8%), 80 of 85 false claims caught, 12 of 12 citation attacks caught. With n = 124 and one event, the plausible range for the false-rewrite rate is roughly 0.02% to 4.4%. In the first real-model run it had wrongly replaced 24 of 470 honest replies (5.1%); v2 fixed those wordings after the fact. It is keyword-based and English-only, and it misses idioms such as &ldquo;dealt with&rdquo; and &ldquo;pushed it through&rdquo;. Models also do not cite receipts on their own: gpt-4.1-mini cited a valid one in 37 of 43 replies when the tool result told it to, and in 0 of 43 when it did not. Panel adds that instruction to tool results.</p>
+
+<h3>Limits</h3>
+<ul>
+  <li><strong>Sandbox only.</strong> No real money, customers or production databases.</li>
+  <li><strong>One author.</strong> I wrote the policies, tasks, labels and code. The tasks ask for things the policy forbids, which is unusual in real traffic.</li>
+  <li><strong>Small.</strong> 47 tasks, 5 samples at temperature 0.7, no confidence intervals. The samples are not independent trials of 47 different situations.</li>
+  <li><strong>Only what is routed through it.</strong> An agent with another path (a shell, a second server, a browser) bypasses Panel. The approval PIN stops an agent from approving itself, but a process running as your OS user can still edit the local ledger.</li>
+</ul>
+<p class="small">Sources: <code>results/llm_report.md</code>, <code>results/claims_v2_report.md</code>, <code>results/eval/latency.json</code> in the panel-firewall repository.</p>
+</div></section>
+
+<section><div class="narrow prose">
+<h2 id="support-bot">2. Support-bot guard</h2>
+<p>Three test sets of a support bot, each written and hashed before the run. All three are small, on a fictional store with fake orders.</p>
+</div></section>
+
+<section><div class="narrow prose">
+<h3>Latest: fresh8, Panel v6.5</h3>
 <p>Model: gpt-5.6-luna (hosted), one run, 20 conversations, 60 turns per condition. Condition A is a typical hand-written support prompt. B is Panel v6.5. C is the Panel prompt with no guard.</p>
 <div class="tbl"><table>
 <thead><tr><th>fresh8</th><th class="n">A: plain prompt</th><th class="n">C: Panel prompt, no guard</th><th class="n">B: Panel v6.5</th></tr></thead>
@@ -139,7 +195,7 @@ export const pages = [
 <p><strong>The one request not carried out.</strong> The customer hedged, asked about sizes, then said "Okay, the large then. Please go ahead." Panel looks only at the bot's previous reply, which offered a hand-off rather than the exchange, so the exchange was blocked.</p>
 <p><strong>Known wrong, not fixed:</strong> "Sure, I'll keep that in mind." counts as a yes (unsafe; it caused nothing in this run because the model had proposed no action on that turn), and "Count me in" does not. A fix found on fresh8 needs another held-out set to measure.</p>
 
-<h2>The history</h2>
+<h3>The history</h3>
 <p>Each set is new, written and hashed before its run, and tests the version of Panel current at that time.</p>
 <div class="tbl"><table>
 <thead><tr><th>Set / version</th><th class="n">Allowed requests carried out, Panel (plain)</th><th class="n">Unbacked claims, Panel (plain)</th><th class="n">Action without consent, Panel</th></tr></thead>
@@ -150,7 +206,7 @@ export const pages = [
 </tbody></table></div>
 <p class="small">On fresh7 the one allowed request Panel missed was "Let's go with the exchange.", not recognised as a yes. On fresh6, Panel executed 14 actions in total and none was without consent. The guard blocked 16 of 75 compliant drafts on fresh6, 2 of 62 on fresh7 and 4 of 64 on fresh8.</p>
 
-<h2>Limits, plainly</h2>
+<h3>Limits, plainly</h3>
 <ul>
   <li><strong>Small.</strong> One model, one run, 20 conversations per set. 1 in 60 is not "never", and 0 in 60 has a one-sided 95% upper bound of about 5%.</li>
   <li><strong>Written by the same agent that wrote the rules.</strong> The test sets were written by the same AI agent that wrote the rules they test, which makes them easier than a stranger's would be.</li>
