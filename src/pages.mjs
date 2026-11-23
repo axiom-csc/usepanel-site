@@ -4,7 +4,7 @@
 // Source of the how-it-works / security facts: the same README, SHOPIFY.md and DEPLOY.md.
 
 export const SITE = 'https://usepanel.dev';
-export const EMAIL = '11narensara11@gmail.com'; // same address the live home page uses for early access
+export const EMAIL = 'narensara@usepanel.dev';
 export const mail = (subject, body = '') =>
   `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}${body ? `&amp;body=${encodeURIComponent(body)}` : ''}`;
 
