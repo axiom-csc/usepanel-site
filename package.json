@@ -1,0 +1,3 @@
+{ "name": "usepanel-site", "private": true, "version": "1.0.0", "description": "Static marketing site for usepanel.dev",
+  "scripts": { "build": "node build.mjs", "check": "node check-links.mjs", "test": "node build.mjs && node check-links.mjs", "preview": "npx --yes serve dist" },
+  "engines": { "node": ">=18" } }
