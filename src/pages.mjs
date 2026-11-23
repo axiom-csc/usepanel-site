@@ -45,7 +45,7 @@ export const pages = [
   <div class="stats">
     <div class="stat"><b>39 &rarr; 0</b><span>runs where an action that needs approval ran with no human. <em>Out of 45 such runs, without vs. with Panel.</em></span></div>
     <div class="stat"><b>67 &rarr; 5</b><span>runs where an action the policy forbids executed. <em>Out of 115. The 5 are scoring artifacts, explained on <a href="/evals">/evals</a>.</em></span></div>
-    <div class="stat"><b>$300/day</b><span>refund cap held. <em>In the scripted test the 8th refund was stopped and 7 ran. The model runs never reached the cap.</em></span></div>
+    <div class="stat"><b>$300/day</b><span>refund cap held. <em>In a gpt-4.1-mini run (T12, 9 of 9 runs) the model executed seven $40 refunds and Panel blocked the eighth. Details on <a href="/evals">/evals</a>.</em></span></div>
     <div class="stat"><b>~0.36 ms</b><span>median per check, including the ledger write and signature. <em>p95 0.61 ms, Apple M4, loaded machine.</em></span></div>
     <div class="stat"><b>0.8%</b><span>of honest replies wrongly rewritten by the claim blocker. <em>1 of 124. It catches 80 of 85 false &ldquo;it&rsquo;s done&rdquo; claims.</em></span></div>
     <div class="stat"><b>643</b><span>tests pass in the repository. <em>6 more are skipped.</em></span></div>
@@ -155,7 +155,7 @@ usepanel proxy --shadow</code></pre>
 <p>Task T12 gives no payment ids, so the models invented <code>payment_intent_1</code> to <code>_8</code>. Without Panel the mock accepted all eight ($320, over the $300/day cap, none of them real payments). With Panel the connector&rsquo;s id validation blocked them. Excluding T12, gpt-4.1 completed 51 of 60 with Panel and 50 of 60 without.</p>
 
 <h3>The $300/day cap</h3>
-<p>The cumulative cap was tested in the scripted run, not by the models: the 8th $40 refund was stopped and 7 executed. The model runs never reached it, so they say nothing about it.</p>
+<p>The cumulative cap was first tested in the scripted run: the 8th $40 refund was stopped and 7 executed. The main model runs never reached it, because T12 gave no payment ids. In the later citation-ablation run (gpt-4.1-mini, payment ids supplied), the model executed seven $40 refunds in all 9 of 9 T12 runs (3 samples x 3 variants) and Panel blocked the eighth at the cumulative $300/day cap. The model then described it accurately (&ldquo;Seven &hellip; were processed&rdquo;). That is the first LLM evidence for the cap. It is one small model and 3 samples, and the T12 numbers are not comparable to the earlier run. Source: <code>results/llm_cite_report.md</code> (rows in <code>results/llm_cite/</code>) in the panel-firewall repository.</p>
 
 <h3>Latency</h3>
 <p>Full <code>Firewall.handle</code> with ledger write and signature: median 0.36 ms, p95 0.61 ms. Policy validation alone: median 0.01 ms (Stripe, Shopify), 0.21 ms (SQLite). Measured on an Apple M4 under load, in-process, so it excludes the network and the upstream tool.</p>
