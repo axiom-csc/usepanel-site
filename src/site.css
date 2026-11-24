@@ -103,3 +103,23 @@ td.n{white-space:nowrap}
 .ftr .cols{display:flex;gap:56px}
 .qs{max-width:520px;margin:24px auto 16px;background:var(--sunken);border:1px solid var(--rule);border-radius:16px;padding:18px 22px;overflow-x:auto}
 .qs code{background:none;padding:0;font-size:15px;line-height:1.8;white-space:pre}
+
+/* pricing */
+.plans{display:grid;gap:16px;margin-top:8px}
+@media (min-width:700px){.plans{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1100px){.plans{grid-template-columns:repeat(4,1fr);gap:20px}}
+.plan{display:flex;flex-direction:column;padding:28px}
+.plan h2{font-size:1.25rem;margin:0 0 6px;letter-spacing:-.01em}
+.plan .price{margin:0 0 6px;color:var(--ink)}
+.plan .price b{font-size:2.4rem;line-height:1.1;letter-spacing:-.03em;font-weight:600}
+.plan .price span{color:var(--slate);font-size:15px}
+.plan .small{margin:0 0 14px}
+.plan-list{list-style:none;padding:0;margin:0 0 22px;flex:1}
+.plan-list li{padding:7px 0 7px 22px;position:relative;font-size:15px;color:var(--ink-strong);border-top:1px solid var(--rule)}
+.plan-list li:first-child{border-top:0}
+.plan-list li::before{content:"";position:absolute;left:2px;top:15px;width:8px;height:8px;border-radius:999px;background:var(--lavender)}
+.plan .btn{text-align:center}
+.plan-note{margin:10px 0 0;text-align:center}
+.founding{margin-top:24px}
+.founding-left{display:inline-block;margin-left:4px;font-weight:600;color:var(--held)}
+.plan .price b.sm{font-size:1.7rem;line-height:1.6}

@@ -24,6 +24,18 @@ Roughly how many support conversations per month?
 Anything else we should know:
 `;
 export const APPLY = mail('Panel design partner application', APPLY_BODY);
+const FOUNDING_BODY = (plan) => `Plan: ${plan}
+Company:
+Website:
+Your name and role:
+
+How many client workspaces do you expect?
+
+What do your AI agents do, and which tools can they use?
+
+Anything else we should know:
+`;
+export const APPLY_FOUNDING = (plan) => mail('Panel founding pricing application', FOUNDING_BODY(plan));
 export const EARLY = mail('Panel early access');
 
 export const pages = [
@@ -243,7 +255,7 @@ usepanel proxy --shadow</code></pre>
 </ol>
 
 <h2>What to expect</h2>
-<p>Panel is early. The results are on the <a href="/evals">evals page</a>, including what it gets wrong. There is no public pricing yet (see <a href="/pricing">pricing</a>); terms for design partners are agreed with you directly.</p>
+<p>Panel is early. The results are on the <a href="/evals">evals page</a>, including what it gets wrong. Plans and prices are on the <a href="/pricing">pricing page</a>; design-partner terms are agreed with you directly, and nothing is charged automatically.</p>
 
 <h2>Apply</h2>
 <p>Applying opens an email to us with a few short questions to fill in. There is no form service and nothing is stored on this site.</p>
@@ -256,16 +268,67 @@ usepanel proxy --shadow</code></pre>
   {
     path: '/pricing',
     title: 'Pricing',
-    desc: 'Panel has no public pricing yet. Design partners agree terms directly.',
+    desc: 'Free, Agency $299 a month, Startup $899 a month, and Enterprise. Every plan includes all of Panel’s safety features. The first 10 agencies get $249 a month for 12 months.',
     body: `
-<div class="narrow page-head"><p class="eyebrow">Pricing</p><h1 class="page-h1">No public pricing yet.</h1>
-<p class="lede" style="margin-left:0">Panel is in early access. There are no plans to buy, no card to enter and no price list, because we have not set one.</p></div>
+<div class="narrow page-head center"><p class="eyebrow">Pricing</p><h1 class="page-h1">Safety is in every plan.</h1>
+<p class="lede" style="margin-left:auto;margin-right:auto">The plans differ in scale and in how you manage clients, never in whether Panel checks an action.</p></div>
+
+<section><div class="wrap">
+<div class="plans">
+  <div class="card plan">
+    <h2>Free</h2><p class="price"><b>$0</b></p><p class="small">The local firewall plus one cloud workspace.</p>
+    <ul class="plan-list">
+      <li>The local firewall, open source (MIT)</li><li>1 cloud workspace</li><li>Shadow mode and enforcement</li><li>7 days of history in the dashboard</li>
+    </ul>
+    <a class="btn ghost" href="https://app.usepanel.dev/#/signup">Start free</a>
+  </div>
+  <div class="card plan">
+    <h2>Agency</h2><p class="price"><b>$299</b><span> a month</span></p><p class="small">For agencies running agents for their clients.</p>
+    <ul class="plan-list">
+      <li>Everything in Free</li><li>Up to 25 client workspaces</li><li>Read-only client views with your branding</li><li>Monthly reports, printable, and report emails to client contacts</li>
+      <li>Policy templates with a per-client preview and bulk apply</li><li>Slack and email approval links</li><li>1 year of history, up to 10 seats</li>
+    </ul>
+    <a class="btn" href="${APPLY_FOUNDING('Agency')}">Apply for founding pricing</a><p class="small plan-note">Card checkout opening soon.</p>
+  </div>
+  <div class="card plan">
+    <h2>Startup</h2><p class="price"><b>$899</b><span> a month</span></p><p class="small">More room, more history, priority support.</p>
+    <ul class="plan-list">
+      <li>Everything in Agency</li><li>Up to 100 client workspaces</li><li>2 years of history, up to 25 seats</li><li>Priority support by email</li>
+    </ul>
+    <a class="btn" href="${APPLY_FOUNDING('Startup')}">Apply for founding pricing</a><p class="small plan-note">Card checkout opening soon.</p>
+  </div>
+  <div class="card plan">
+    <h2>Enterprise</h2><p class="price"><b class="sm">Contact us</b></p><p class="small">Custom terms and limits.</p>
+    <ul class="plan-list">
+      <li>Everything in Startup</li><li>Custom limits and terms, agreed with you</li>
+    </ul>
+    <a class="btn ghost" href="${mail('Panel Enterprise')}">Contact us</a>
+  </div>
+</div>
+
+<div class="note founding">
+  <p><strong>Founding offer: the first 10 agencies get $249 a month, locked for 12 months.</strong> The 12 months start the day your subscription starts. <span id="founding-left" class="founding-left" hidden></span></p>
+  <p class="small">Spots are counted from real accepted applications, not a countdown. Nothing is charged until you start a subscription yourself.</p>
+</div>
+</div></section>
 
 <section><div class="narrow prose">
-<p>Early users are design partners, and terms are agreed directly with each.</p>
-<p>When there is a price, it will be on this page.</p>
-<div class="cta" style="justify-content:flex-start"><a class="btn" href="${APPLY}">Apply as a design partner</a><a class="btn ghost" href="/design-partners">What that involves</a></div>
+<h2>In every plan, including Free</h2>
+<ul>
+  <li>Policy checks in code before every action</li>
+  <li>Human approval for risky actions, with an approval PIN</li>
+  <li>Signed, hash-chained receipts and a tamper-evident audit log</li>
+  <li>Circuit breaker, per-order duplicate guard and daily caps</li>
+  <li>Shadow mode, and enforcement you switch on yourself</li>
+</ul>
+<p>Plans only change how many clients you can manage, how far back the dashboard shows, and conveniences like client views, reports, templates, and Slack or email approval links. Your policies, receipts and audit log are never locked behind a plan.</p>
+<h2>Questions</h2>
+<p><strong>Can I try it first?</strong> Yes. The local firewall is free and open source, and Free includes one cloud workspace in shadow mode.</p>
+<p><strong>Not useful in your first 30 days?</strong> When paid plans open, you can cancel in Settings for a full refund.</p>
+<p><strong>Want to be a design partner instead?</strong> See <a href="/design-partners">design partners</a>.</p>
+<div class="cta" style="justify-content:flex-start"><a class="btn" href="${APPLY_FOUNDING('Agency')}">Apply for founding pricing</a><a class="btn ghost" href="${mail('Panel pricing question')}">Ask a question</a></div>
 </div></section>
+<script src="/assets/pricing.js" defer></script>
 `,
   },
 
@@ -331,7 +394,7 @@ usepanel proxy --shadow</code></pre>
 <h2>This website</h2>
 <ul>
   <li>It sets no cookies.</li>
-  <li>It runs no analytics and no advertising or tracking scripts.</li>
+  <li>It runs no analytics and no advertising or tracking scripts. The one script it has, on the pricing page, asks our app server how many founding spots are left; that request carries no cookies and no personal data.</li>
   <li>It has no sign-in and no form that sends data to us. Its fonts are served from the site itself, not from a third party.</li>
 </ul>
 <p>The site is hosted on Cloudflare Pages. Like any host, Cloudflare processes the technical details of each request (such as IP address and browser) to serve the page, under its own terms.</p>
