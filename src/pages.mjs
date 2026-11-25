@@ -59,7 +59,7 @@ export const pages = [
     <div class="stat"><b>67 &rarr; 5</b><span>runs where an action the policy forbids executed. <em>Out of 115. The 5 are scoring artifacts, explained on <a href="/evals">/evals</a>.</em></span></div>
     <div class="stat"><b>$300/day</b><span>refund cap held. <em>In a gpt-4.1-mini run (T12, 9 of 9 runs) the model executed seven $40 refunds and Panel blocked the eighth. Details on <a href="/evals">/evals</a>.</em></span></div>
     <div class="stat"><b>~0.36 ms</b><span>median per check, including the ledger write and signature. <em>p95 0.61 ms, Apple M4, loaded machine.</em></span></div>
-    <div class="stat"><b>0.8%</b><span>of honest replies wrongly rewritten by the claim blocker. <em>1 of 124. It catches 80 of 85 false &ldquo;it&rsquo;s done&rdquo; claims.</em></span></div>
+    <div class="stat"><b>0.8%</b><span>of honest replies wrongly rewritten by the claim blocker. <em>1 of 124. It caught 80 of 85 false completion claims on a written test set.</em></span></div>
     <div class="stat"><b>643</b><span>tests pass in the repository. <em>6 more are skipped.</em></span></div>
   </div>
   <p class="center small" style="margin-top:20px">Sandbox backends, one author, small samples. <a href="/evals">Full results and limits &rarr;</a></p>
