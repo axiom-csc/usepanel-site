@@ -47,7 +47,7 @@ export const pages = [
     body: `
 <div class="hero"><div class="in">
   <h1>An action firewall for AI agents<span class="dot">.</span></h1>
-  <p class="lede">Panel sits between an agent and its tools. Every action is checked against your policy in code, held for a human when it should be, and logged with a signed receipt. No model decides the verdict.</p>
+  <p class="lede">Panel sits between an agent and its tools. Every action is checked against your policy in code, held for a human when it should be, and logged with a signed receipt. Every decision is made by plain code you can read.</p>
   <div class="cta"><a class="btn" href="/evals">See the results</a><a class="btn ghost" href="/how-it-works">How it works</a></div>
 </div></div>
 
@@ -87,7 +87,7 @@ usepanel proxy --shadow</code></pre>
 </div></section>
 
 <section><div class="narrow center">
-  <h2>Also: a support-bot guard</h2>
+  <h2>There&rsquo;s also a support-bot guard</h2>
   <p class="small" style="max-width:56ch;margin:0 auto">Panel also checks what a customer-support bot says and does against a store policy. Those results are the second section of <a href="/evals">/evals</a>.</p>
 </div></section>
 `,
@@ -98,7 +98,7 @@ usepanel proxy --shadow</code></pre>
     title: 'How it works',
     desc: 'How Panel checks, confirms and logs each action an AI agent tries, and what it does when something does not pass.',
     body: `
-<div class="narrow page-head"><p class="eyebrow">How it works</p><h1 class="page-h1">A check between the agent and the action.</h1>
+<div class="narrow page-head"><p class="eyebrow">How it works</p><h1 class="page-h1">Where Panel sits, and what it checks</h1>
 <p class="lede" style="margin-left:0">Panel is a proxy that sits in front of an OpenAI-compatible model endpoint you already use. Replies and actions pass through it before the customer sees them or your store changes.</p></div>
 
 <section><div class="narrow prose">
@@ -122,7 +122,7 @@ usepanel proxy --shadow</code></pre>
 <tr><td><code>auto</code></td><td>Runs at once if within the limits you set (for example refunds up to a dollar amount); otherwise queued.</td></tr>
 </tbody></table></div>
 
-<h2>Never twice</h2>
+<h2>Running an action only once</h2>
 <p>Each action gets a key made from the conversation, the order, the action type and the amount. The key is stored once in a SQLite ledger, and only one caller can move it into "executing". Tests cover 20 concurrent submits running once, a restart keeping the ledger, and approving twice running nothing the second time.</p>
 
 <h2>Hand-offs</h2>
@@ -146,8 +146,8 @@ usepanel proxy --shadow</code></pre>
     title: 'Evals',
     desc: 'Action firewall results on real gpt-4.1 agents (940 task-runs), the scoring artifacts, the claim blocker, latency, and the earlier support-bot results, with every limit.',
     body: `
-<div class="narrow page-head"><p class="eyebrow">Evals</p><h1 class="page-h1">What we measured, and how small it is.</h1>
-<p class="lede" style="margin-left:0">Two sections: the action firewall on real models, then the support-bot guard. Every test was written and hashed before it ran, by the same author who wrote the rules. Read the limits before the numbers.</p></div>
+<div class="narrow page-head"><p class="eyebrow">Evals</p><h1 class="page-h1">Results so far</h1>
+<p class="lede" style="margin-left:0">Two sections: the action firewall on real models, then the support-bot guard. Every test was written and hashed before it ran, by the same person who wrote the rules, so treat these as early numbers. The limits are listed at the end of each section.</p></div>
 
 <section><div class="narrow prose">
 <h2 id="firewall">1. Action firewall, real models</h2>
@@ -220,7 +220,7 @@ usepanel proxy --shadow</code></pre>
 </tbody></table></div>
 <p class="small">On fresh7 the one allowed request Panel missed was "Let's go with the exchange.", not recognised as a yes. On fresh6, Panel executed 14 actions in total and none was without consent. The guard blocked 16 of 75 compliant drafts on fresh6, 2 of 62 on fresh7 and 4 of 64 on fresh8.</p>
 
-<h3>Limits, plainly</h3>
+<h3>Limits</h3>
 <ul>
   <li><strong>Small.</strong> One model, one run, 20 conversations per set. 1 in 60 is not "never", and 0 in 60 has a one-sided 95% upper bound of about 5%.</li>
   <li><strong>Written by the same agent that wrote the rules.</strong> The test sets were written by the same AI agent that wrote the rules they test, which makes them easier than a stranger's would be.</li>
@@ -272,8 +272,8 @@ usepanel proxy --shadow</code></pre>
     title: 'Pricing',
     desc: 'Free, Agency $299 a month, Startup $899 a month, and Enterprise. Every plan includes all of Panel’s safety features. The first 10 agencies get $249 a month for 12 months.',
     body: `
-<div class="narrow page-head center"><p class="eyebrow">Pricing</p><h1 class="page-h1">Safety is in every plan.</h1>
-<p class="lede" style="margin-left:auto;margin-right:auto">The plans differ in scale and in how you manage clients, never in whether Panel checks an action.</p></div>
+<div class="narrow page-head center"><p class="eyebrow">Pricing</p><h1 class="page-h1">Every plan gets the same checks</h1>
+<p class="lede" style="margin-left:auto;margin-right:auto">What changes between plans is how many clients you can manage and how much history you keep. Free gets the same checks as Enterprise.</p></div>
 
 <section><div class="wrap">
 <div class="plans">
@@ -339,7 +339,7 @@ usepanel proxy --shadow</code></pre>
     title: 'Security',
     desc: 'What Panel does to limit what it can do, what it needs access to, and what it does not claim.',
     body: `
-<div class="narrow page-head"><p class="eyebrow">Security</p><h1 class="page-h1">Built to do less, and to fail closed.</h1>
+<div class="narrow page-head"><p class="eyebrow">Security</p><h1 class="page-h1">How Panel handles access and failures</h1>
 <p class="lede" style="margin-left:0">This page describes what the code does today. It is not an audit report, and Panel holds no security certifications.</p></div>
 
 <section><div class="narrow prose">
@@ -359,7 +359,7 @@ usepanel proxy --shadow</code></pre>
   <li>The default execution mode is <code>dry_run</code>: nothing runs until you choose otherwise.</li>
 </ul>
 
-<h2>Never twice</h2>
+<h2>Running an action only once</h2>
 <p>A ledger of action keys makes a repeated action run once. Shopify's own idempotency key backs it for 24 hours. After a crash, a key left in "executing" is not retried automatically, because its outcome is unknown; you check the order.</p>
 
 <h2>Credentials and the approval page</h2>
@@ -389,7 +389,7 @@ usepanel proxy --shadow</code></pre>
     title: 'Privacy',
     desc: 'This website collects nothing. What happens when you email us.',
     body: `
-<div class="narrow page-head"><p class="eyebrow">Privacy</p><h1 class="page-h1">This site collects nothing.</h1>
+<div class="narrow page-head"><p class="eyebrow">Privacy</p><h1 class="page-h1">This site doesn&rsquo;t collect anything</h1>
 <p class="lede" style="margin-left:0">Last updated 23 November 2026.</p></div>
 
 <section><div class="narrow prose">
