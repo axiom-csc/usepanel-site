@@ -18,14 +18,15 @@ const layout = (p) => {
 <meta property="og:type" content="website"><meta property="og:site_name" content="Panel"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(p.desc)}"><meta property="og:url" content="${url}"><meta property="og:image" content="${SITE}/assets/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="${SITE}/assets/og-image.png">
 <link rel="icon" href="/assets/icon.svg" type="image/svg+xml"><link rel="icon" href="/assets/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
-<link rel="preload" href="/assets/fonts/jakarta-500.ttf" as="font" type="font/ttf" crossorigin>
-<link rel="stylesheet" href="/assets/site.css">
+<meta name="theme-color" content="#dbe4fa">
+<link rel="preload" href="/fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/tokens.css"><link rel="stylesheet" href="/assets/site.css">
 </head><body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="hdr"><a class="brand" href="/" aria-label="Panel home">${mark}<span>panel</span></a><nav class="nav" aria-label="Main">${links}</nav><a class="btn" href="${EARLY}">Get early access</a></header>
 <main id="main">${p.body}</main>
 <footer class="ftr"><div class="in">
-<div style="max-width:38ch"><p class="mark"><img src="/assets/panel-mark-black.svg" alt="" width="20" height="20">panel</p><p style="margin:8px 0 0">Panel is part of <a href="https://tenthlook.com">Tenthlook</a>.</p><p style="margin:20px 0 0;color:var(--muted)">&copy; 2026 Panel &middot; Tenthlook</p></div>
+<div style="max-width:38ch"><p class="mark"><img src="/assets/panel-mark-black.svg" alt="" width="20" height="20">panel</p><p style="margin:12px 0 0"><a class="tl" href="https://tenthlook.com" aria-label="A Tenthlook product: tenthlook.com">A product of <img src="/brand/tenthlook-dark.svg" alt="tenthlook." width="93" height="16"></a></p><p style="margin:20px 0 0;color:var(--muted)">&copy; 2026 Panel &middot; Tenthlook</p></div>
 <div class="cols"><div><h2>Panel</h2><ul><li><a href="/how-it-works">How it works</a></li><li><a href="/evals">Evals</a></li><li><a href="/design-partners">Design partners</a></li><li><a href="/pricing">Pricing</a></li></ul></div>
 <div><h2>Company</h2><ul><li><a href="https://tenthlook.com">Tenthlook</a></li><li><a href="/security">Security</a></li><li><a href="/privacy">Privacy</a></li><li><a href="${EARLY}">Contact</a></li></ul></div></div>
 </div></footer>
@@ -34,6 +35,7 @@ const layout = (p) => {
 
 rmSync('dist', { recursive: true, force: true });
 mkdirSync('dist/assets', { recursive: true });
+cpSync('tenthlook', 'dist', { recursive: true });
 cpSync('assets', 'dist/assets', { recursive: true });
 cpSync('src/site.css', 'dist/assets/site.css');
 

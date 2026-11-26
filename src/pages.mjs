@@ -46,7 +46,7 @@ export const pages = [
     hero: true,
     body: `
 <div class="hero"><div class="in">
-  <h1>An action firewall for AI agents.</h1>
+  <h1>An action firewall for AI agents<span class="dot">.</span></h1>
   <p class="lede">Panel sits between an agent and its tools. Every action is checked against your policy in code, held for a human when it should be, and logged with a signed receipt. No model decides the verdict.</p>
   <div class="cta"><a class="btn" href="/evals">See the results</a><a class="btn ghost" href="/how-it-works">How it works</a></div>
 </div></div>
@@ -69,9 +69,11 @@ export const pages = [
   <h2 class="center">Try it in shadow mode</h2>
   <p class="center small" style="max-width:62ch;margin:0 auto">Shadow mode lets every call run and records what Panel would have blocked or held. It protects nothing until you remove the flag yourself.</p>
   <pre class="qs"><code>pip install panel-firewall
+usepanel keygen
+usepanel pin set
 usepanel init
 usepanel proxy --shadow</code></pre>
-  <p class="center small">Needs Python 3.11+. <code>usepanel init</code> drafts a starter policy from your upstream MCP server: review it. Then <code>usepanel report --since 48h</code> shows what would have happened.</p>
+  <p class="center small">Needs Python 3.11+. <code>usepanel keygen</code> and <code>usepanel pin set</code> create the receipt-signing key and your approval PIN; Panel will not start without them. <code>usepanel init</code> drafts a starter policy from your upstream MCP server: review it. Then <code>usepanel report --since 48h</code> shows what would have happened.</p>
 </div></section>
 
 <section><div class="wrap">
@@ -338,7 +340,7 @@ usepanel proxy --shadow</code></pre>
     desc: 'What Panel does to limit what it can do, what it needs access to, and what it does not claim.',
     body: `
 <div class="narrow page-head"><p class="eyebrow">Security</p><h1 class="page-h1">Built to do less, and to fail closed.</h1>
-<p class="lede" style="margin-left:0">This page describes what the code does today. It is not an audit report, and we make no claim of certifications such as SOC 2 or ISO 27001.</p></div>
+<p class="lede" style="margin-left:0">This page describes what the code does today. It is not an audit report, and Panel holds no security certifications.</p></div>
 
 <section><div class="narrow prose">
 <h2>Least access</h2>
@@ -377,7 +379,7 @@ usepanel proxy --shadow</code></pre>
   <li>There has been no third-party security review.</li>
   <li>The ledger is one SQLite file, so Panel must run as a single instance.</li>
 </ul>
-<p>Found a problem? <a href="${mail('Panel security report')}">Email us</a>.</p>
+<p>Found a problem? Email <a href="mailto:security@tenthlook.com?subject=Panel%20security">security@tenthlook.com</a>. Please do not open a public issue for anything that could let someone forge a receipt or approve an action without the PIN.</p>
 </div></section>
 `,
   },
