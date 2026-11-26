@@ -3,7 +3,7 @@
    periwinkle paper + mist, glass cards, pill buttons and nav, glass footer. */
 
 :root{
-  --content-max:1400px; --measure:75ch;
+  --content-max:1200px; --measure:75ch; --gutter:24px;
   --paper:var(--bg); --surface:rgba(255,255,255,.58); --sunken:rgba(65,105,225,.07);
   --ink:var(--text); --ink-strong:#2c3247; --slate:var(--text-muted); --muted:#6b7288;
   --rule:rgba(65,105,225,.148); --rule-strong:rgba(65,105,225,.24);
@@ -26,6 +26,7 @@ a{color:inherit}
 .skip:focus{left:8px}
 
 /* header: tenthlook pill nav, Panel's own mark */
+@media (min-width:768px){:root{--gutter:48px}}
 .hdr{display:flex;flex-wrap:wrap;align-items:center;gap:12px 28px;padding:20px var(--gutter);max-width:calc(var(--content-max) + 2*var(--gutter));margin:0 auto;width:100%}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--wordmark);font-size:26px;line-height:1;margin-right:auto;color:var(--ink)}
 .brand img{width:34px;height:34px;display:block}
@@ -119,9 +120,9 @@ td.n{white-space:nowrap}
 .ftr .cols{display:flex;gap:56px}
 
 /* pricing */
-.plans{display:grid;gap:16px;margin-top:8px}
-@media (min-width:700px){.plans{grid-template-columns:repeat(2,1fr)}}
-@media (min-width:1100px){.plans{grid-template-columns:repeat(4,1fr);gap:20px}}
+.plans{display:grid;grid-template-columns:1fr;gap:24px;align-items:stretch;max-width:var(--content-max);margin:8px auto 0}
+@media (min-width:640px){.plans{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1024px){.plans{grid-template-columns:repeat(4,1fr)}}
 .plan{display:flex;flex-direction:column;padding:30px}
 .plan h2{font-size:var(--fs-label);font-weight:600;letter-spacing:var(--tracking-label);text-transform:uppercase;color:var(--slate);margin:0 0 12px}
 .plan .price{margin:0 0 6px;color:var(--ink)}

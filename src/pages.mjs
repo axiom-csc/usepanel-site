@@ -74,6 +74,7 @@ usepanel pin set
 usepanel init
 usepanel proxy --shadow</code></pre>
   <p class="center small">Needs Python 3.11+. <code>usepanel keygen</code> and <code>usepanel pin set</code> create the receipt-signing key and your approval PIN; Panel will not start without them. <code>usepanel init</code> drafts a starter policy from your upstream MCP server: review it. Then <code>usepanel report --since 48h</code> shows what would have happened.</p>
+  <p class="center small">Prefer a dashboard to a terminal? <a href="https://app.usepanel.dev">app.usepanel.dev</a> gives you the same policy, approvals and events, with no local report command to run.</p>
 </div></section>
 
 <section><div class="wrap">
@@ -96,46 +97,52 @@ usepanel proxy --shadow</code></pre>
   {
     path: '/how-it-works',
     title: 'How it works',
-    desc: 'How Panel checks, confirms and logs each action an AI agent tries, and what it does when something does not pass.',
+    desc: 'How Panel intercepts an AI agent’s MCP tool calls, checks them against a deterministic policy, holds risky ones for PIN approval, and logs every decision with a signed receipt.',
     body: `
 <div class="narrow page-head"><p class="eyebrow">How it works</p><h1 class="page-h1">Where Panel sits, and what it checks</h1>
-<p class="lede" style="margin-left:0">Panel is a proxy that sits in front of an OpenAI-compatible model endpoint you already use. Replies and actions pass through it before the customer sees them or your store changes.</p></div>
+<p class="lede" style="margin-left:0">Panel is an MCP proxy. It sits between an agent and the MCP tool server it already talks to: the agent's tool calls go through Panel instead of straight to the server. Every call goes <strong>intercept &rarr; check &rarr; consent &rarr; execute (once) &rarr; log &rarr; receipt</strong>. The allow / needs_consent / block decision is plain deterministic code reading your YAML policy and the ledger. No model is consulted when deciding.</p></div>
 
 <section><div class="narrow prose">
-<h2>The path of one request</h2>
+<h2>The path of one tool call</h2>
 <ol>
-  <li><strong>Your policy.</strong> You write the rules in a policy file: numeric limits, time windows, eligibility conditions, things the bot may never promise, and escalation thresholds. Each rule has an id and a plain-English description.</li>
-  <li><strong>Extract.</strong> Panel reads the agent's draft reply and pulls out the claims and actions in it (amounts, percentages, promises, refusals).</li>
-  <li><strong>Check, in code.</strong> Each claim is a <em>pass</em>, a <em>violation</em> (with the rule id and reason) or <em>unverified</em> (a needed fact is missing). Unverified claims are blocked by default, so nothing passes silently. The facts come from the real order, not from the model.</li>
-  <li><strong>Regenerate or fall back.</strong> A blocked draft goes back to the model with the reason, up to twice. If it still fails, the customer gets the policy's safe reply. Every block, regeneration and fallback is logged.</li>
-  <li><strong>Consent.</strong> An action runs only if the customer's latest message clearly asked for it, or said yes to the bot's offer of it in the previous reply. A question gets an explanation and an offer, never an action. This is checked from the transcript, separately from the prompt and the guard. With no transcript, nothing runs.</li>
-  <li><strong>Re-check, then run.</strong> The executor re-reads the order fresh and re-checks the action with the same deterministic checker. A refund larger than what is still refundable is blocked, not run.</li>
-  <li><strong>Confirmation matches reality.</strong> What the bot tells the customer is worded from the executor's result: "I've issued a refund" only if it really ran, "I've sent this for approval" if it was queued, and "I wasn't able to complete that" if it failed.</li>
+  <li><strong>Your policy.</strong> You write the rules in a policy file (or the dashboard policy builder): which tools are allowed, their risk level, numeric and row limits, which SQL statement kinds need a human, and circuit-breaker thresholds. Unlisted tools are blocked by default &mdash; nothing runs just because the policy didn't mention it.</li>
+  <li><strong>Check, in code.</strong> Each call is <em>allow</em>, <em>block</em>, or <em>needs_consent</em>, decided by your policy and the ledger's history (for duplicate and rate checks). This is the same code whether Panel is observing or enforcing.</li>
+  <li><strong>Consent, out of band.</strong> A call marked <code>needs_consent</code> is held, not executed. The agent gets an approval id, nothing else. Approving it needs a channel the agent's own tool calls cannot reach &mdash; the CLI (<code>usepanel approve &lt;id&gt;</code>, PIN prompted on the terminal), the local approval UI, or the dashboard &mdash; and your approval PIN. The agent cannot approve its own action; fields like <code>consent: true</code> in its call are ignored.</li>
+  <li><strong>Execute once.</strong> Each call gets an idempotency key from its arguments. The key is claimed once in the ledger before the upstream server is called, so a retry, a duplicate, or two approvals of the same action run it exactly once.</li>
+  <li><strong>Log and sign.</strong> Every outcome &mdash; allowed, blocked, held, approved, denied, executed, failed &mdash; is appended to a SQLite ledger. An executed call gets a signed receipt chained to the one before it, so a receipt can't be edited, reordered, or dropped without breaking the chain (<code>usepanel verify-chain</code> checks this).</li>
+  <li><strong>Claims match receipts.</strong> <code>usepanel check-reply</code> reads what the agent is about to tell the user and blocks or rewrites any claim that an action happened unless it cites a receipt the ledger actually has for that conversation.</li>
 </ol>
 
-<h2>Three execution modes</h2>
+<h2>Shadow mode, then enforcing</h2>
+<p>Every policy runs in one of two modes:</p>
 <div class="tbl"><table>
-<thead><tr><th>Mode</th><th>What happens to an approved action</th></tr></thead>
+<thead><tr><th>Mode</th><th>What happens</th></tr></thead>
 <tbody>
-<tr><td><code>dry_run</code> (default)</td><td>Recorded, with what auto mode would have done. Nothing runs.</td></tr>
-<tr><td><code>approval</code></td><td>Queued. Runs only when someone clicks Approve on a local approval page.</td></tr>
-<tr><td><code>auto</code></td><td>Runs at once if within the limits you set (for example refunds up to a dollar amount); otherwise queued.</td></tr>
+<tr><td><code>shadow</code></td><td>Every call is checked and logged, but all of them run &mdash; Panel records what it would have blocked or held, and nothing is actually stopped. <code>usepanel report</code> reads this back.</td></tr>
+<tr><td>enforcing</td><td>The same checks now control the outcome for real: <code>block</code> calls are refused, <code>needs_consent</code> calls are held for PIN approval, and only <code>allow</code> calls run immediately.</td></tr>
 </tbody></table></div>
+<p>Start in shadow mode, read <code>usepanel report --since 48h</code>, then turn enforcing on yourself &mdash; in the policy file or the dashboard. Panel never switches itself from shadow to enforcing.</p>
 
-<h2>Running an action only once</h2>
-<p>Each action gets a key made from the conversation, the order, the action type and the amount. The key is stored once in a SQLite ledger, and only one caller can move it into "executing". Tests cover 20 concurrent submits running once, a restart keeping the ledger, and approving twice running nothing the second time.</p>
+<h2>SQL tools: row counts, not just statement kind</h2>
+<p>For a tool that runs SQL, the policy names the argument that holds the statement (<code>sql_arg</code>) and can require consent for specific statement kinds with <code>consent_sql_kinds</code> &mdash; for example <code>[delete]</code>, so every <code>DELETE</code> needs a person, even one that touches a single row. Panel parses the SQL (not a regex) and refuses an <code>UPDATE</code>/<code>DELETE</code> with no <code>WHERE</code>, or one with a constant-true <code>WHERE</code> (<code>WHERE 1=1</code>). Give Panel a <code>database:</code> path and it counts the rows a statement would actually touch before running it, so <code>max_rows</code> (block above N) or <code>consent_over_rows</code> (ask above N) catches what statement-kind checks alone can't, such as a condition that's true for every row but isn't a bare constant. Without a <code>database:</code> path, an <code>UPDATE</code>/<code>DELETE</code> can't be row-counted and is blocked rather than guessed at.</p>
 
-<h2>Hand-offs</h2>
-<p>When a conversation needs a person, Panel sends a deterministic summary (order facts, the first and last customer message, actions taken or queued, the last 10 messages) to a webhook or by email. If no channel is configured, the hand-off fails and the bot says it could not complete it. It never claims a person was told.</p>
+<h2>Running once, and the circuit breaker</h2>
+<p>The idempotency key is stored once in the ledger, and only one caller can move it into "claimed"; concurrent or retried calls for the same action run it at most once. <code>circuit_breaker: {blocks: 3, per_seconds: 60}</code> freezes every non-read tool after that many enforced blocks in the window, with a signed <code>frozen</code> receipt; a person lifts it with <code>usepanel unfreeze</code> (the approval PIN again) or a signed cloud decision bound to that exact freeze. The breaker never acts in shadow mode.</p>
 
 <h2>What it does not do yet</h2>
 <ul>
-  <li>It only enforces rules written in the policy file. Anything not written down is not checked.</li>
-  <li>It does not check tool calls: requests that use <code>tools</code> are refused by the proxy.</li>
-  <li>Consent recognition is phrase-based and imperfect. See <a href="/evals">the evals</a> for the cases it gets wrong.</li>
-  <li>Exchanges are manual: approved ones go to your team through the hand-off channel.</li>
-  <li>The ledger is a single SQLite file, so run one instance.</li>
+  <li>It only enforces rules written in the policy. A tool the policy doesn't mention is blocked by default, but a rule you meant to add and didn't is simply not checked.</li>
+  <li>The SQL guard doesn't reason about a tautology mixed with a column, such as <code>WHERE id=1 OR 1=1</code> &mdash; only the row count catches that, so give every writable SQL tool a <code>max_rows</code>, <code>consent_over_rows</code>, or <code>consent_sql_kinds</code>. See <code>KNOWN_ISSUES.md</code> in the repo.</li>
+  <li>The approval PIN does not stop an agent with full access as your OS user &mdash; it could edit the PIN file or the ledger directly. Run agents under a separate OS user or sandbox, or approve from another device.</li>
+  <li>The ledger is a single SQLite file: run one proxy instance per policy.</li>
 </ul>
+
+<h2>Measured, not claimed</h2>
+<p>On 940 real gpt-4.1 / gpt-4.1-mini task-runs, with and without Panel: actions that need a human and ran with none, 39 &rarr; 0; actions the policy forbids that executed anyway, 67 &rarr; 5 (the 5 are scoring artifacts, explained on <a href="/evals">/evals</a>); median overhead per check, including the ledger write and signature, ~0.36&nbsp;ms. Full numbers, methodology and limits on <a href="/evals">/evals</a>.</p>
+
+<h2>There's also a support-bot guard</h2>
+<p>Separately from the MCP action firewall above, Panel checks what a customer-support bot says and does against a store policy &mdash; a different proxy, in front of a model endpoint rather than an MCP server. Those results are the second section of <a href="/evals">/evals</a>.</p>
+
 <div class="cta" style="justify-content:flex-start"><a class="btn" href="${APPLY}">Apply as a design partner</a><a class="btn ghost" href="/security">Security</a></div>
 </div></section>
 `,
