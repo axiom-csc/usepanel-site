@@ -68,7 +68,7 @@ export const pages = [
 <section><div class="wrap">
   <h2 class="center">Try it in shadow mode</h2>
   <p class="center small" style="max-width:62ch;margin:0 auto">Shadow mode lets every call run and records what Panel would have blocked or held. It protects nothing until you remove the flag yourself.</p>
-  <pre class="qs"><code>pip install panel-firewall
+  <pre class="qs"><code>pipx install panel-firewall
 usepanel keygen
 usepanel pin set
 usepanel init
