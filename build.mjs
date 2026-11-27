@@ -26,7 +26,7 @@ const layout = (p) => {
 <header class="hdr"><a class="brand" href="/" aria-label="Panel home">${mark}<span>panel</span></a><nav class="nav" aria-label="Main">${links}</nav><a class="btn" href="${EARLY}">Get early access</a></header>
 <main id="main">${p.body}</main>
 <footer class="ftr"><div class="in">
-<div style="max-width:38ch"><p class="mark"><img src="/assets/panel-mark-black.svg" alt="" width="20" height="20">panel</p><p style="margin:12px 0 0"><a class="tl" href="https://tenthlook.com" aria-label="A Tenthlook product: tenthlook.com">A product of <img src="/brand/tenthlook-dark.svg" alt="tenthlook." width="93" height="16"></a></p><p style="margin:20px 0 0;color:var(--muted)">&copy; 2026 Panel &middot; Tenthlook</p></div>
+<div style="max-width:38ch"><p class="mark"><img src="/assets/panel-mark-black.svg" alt="" width="20" height="20">panel</p><p style="margin:12px 0 0"><a class="tl" href="https://tenthlook.com" aria-label="A Tenthlook product: tenthlook.com">A product of <img src="/brand/tenthlook-dark.svg" alt="tenthlook." width="93" height="16"></a></p><p style="margin:20px 0 0;color:var(--muted)">&copy; 2026 Panel &middot; Tenthlook</p><p>Questions? <a href="mailto:narensara@usepanel.dev">narensara@usepanel.dev</a></p></div>
 <div class="cols"><div><h2>Panel</h2><ul><li><a href="/how-it-works">How it works</a></li><li><a href="/evals">Evals</a></li><li><a href="/design-partners">Design partners</a></li><li><a href="/pricing">Pricing</a></li></ul></div>
 <div><h2>Company</h2><ul><li><a href="https://tenthlook.com">Tenthlook</a></li><li><a href="/security">Security</a></li><li><a href="/privacy">Privacy</a></li><li><a href="${EARLY}">Contact</a></li></ul></div></div>
 </div></footer>

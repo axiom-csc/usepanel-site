@@ -57,6 +57,10 @@ export const pages = [
       <p class="eyebrow">For developers</p>
       <h2>Put a proxy in front of your MCP server</h2>
       <pre class="qs"><code>pipx install panel-firewall</code></pre>
+      <p style="margin-top: 1rem; color: var(--text-secondary, #666);">
+        Or try it first with zero setup:
+      </p>
+      <pre class="qs"><code>pipx run panel-firewall demo</code></pre>
       <pre class="qs"><code>usepanel init
 usepanel proxy --shadow
 usepanel report --since 48h</code></pre>
