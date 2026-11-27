@@ -52,6 +52,89 @@ export const pages = [
 </div></div>
 
 <section id="install"><div class="wrap">
+<section id="demo"><div class="wrap">
+  <p class="eyebrow">Live demo</p>
+  <h2>See it in action</h2>
+  <style>
+  .term{background:#0d1117;color:#c9d1d9;border-radius:12px;box-shadow:0 12px 40px rgba(20,16,43,.25);overflow:hidden;max-width:820px;margin:24px 0 0;font-family:var(--mono)}
+  .term-bar{display:flex;gap:7px;align-items:center;padding:11px 14px;background:#161b22;font-size:12px;color:#8b949e}
+  .term-bar i{width:11px;height:11px;border-radius:50%;background:#ff5f56}
+  .term-bar i:nth-child(2){background:#ffbd2e}.term-bar i:nth-child(3){background:#27c93f}
+  .term-bar span{margin-left:8px}
+  .term-body{padding:18px 20px;min-height:230px;font-size:14px;line-height:1.7;overflow-x:auto}
+  .term-body .ln{margin:0 0 14px;white-space:pre-wrap;overflow-wrap:anywhere}
+  .term-body .cmd{display:inline-block;overflow:hidden;white-space:nowrap;vertical-align:bottom;width:0;max-width:100%;border-right:2px solid #c9d1d9;animation:ty 1.2s steps(var(--n)) forwards,caret .6s step-end 2 1.2s forwards}
+  .term-body .v{display:block;padding-left:2ch;animation:fade .4s ease both}
+  .term-body .ALLOWED{color:#3fb950}.term-body .BLOCKED{color:#f85149}.term-body .HELD{color:#e3b341}
+  .term-body .why{color:#8b949e}
+  .term-body a{color:#79c0ff}
+  .term-replay{margin-top:4px}
+  @keyframes ty{to{width:calc(var(--n)*1ch)}}
+  @keyframes caret{to{border-right-color:transparent}}
+  @keyframes fade{from{opacity:0;transform:translateY(3px)}}
+  @media (prefers-reduced-motion:reduce){.term-body .cmd{animation:none;width:auto;border:0}.term-body .v{animation:none}}
+  </style>
+  <div class="term" role="img" aria-label="Simulated terminal: Panel allows a read action, blocks a refund of 500, and holds a refund of 200 for human approval">
+    <div class="term-bar"><i></i><i></i><i></i><span>panel &mdash; policy check (simulated)</span></div>
+    <div class="term-body" id="term-body" aria-live="polite"></div>
+  </div>
+  <script>
+  (function () {
+    var body = document.getElementById('term-body');
+    if (!body) return;
+    var steps = [
+      ['orders.lookup(order_id="1042")', 'ALLOWED', 'read action, within policy'],
+      ['refunds.create(amount=500)', 'BLOCKED', 'amount 500 exceeds the maximum 250'],
+      ['refunds.create(amount=200)', 'HELD', 'amount over 100, needs human approval']
+    ];
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var wait = function (ms) { return new Promise(function (r) { setTimeout(r, reduce ? 0 : ms); }); };
+    var started = false;
+    function el(tag, cls, text) {
+      var e = document.createElement(tag);
+      if (cls) e.className = cls;
+      if (text) e.textContent = text;
+      return e;
+    }
+    async function play() {
+      body.textContent = '';
+      for (var i = 0; i < steps.length; i++) {
+        var s = steps[i], text = 'Agent calls ' + s[0];
+        var line = el('div', 'ln');
+        line.appendChild(el('span', '', '> '));
+        var cmd = el('span', 'cmd', text);
+        cmd.style.setProperty('--n', text.length);
+        line.appendChild(cmd);
+        body.appendChild(line);
+        await wait(1200 + 1000); // typing, then a 1s pause
+        var v = el('span', 'v');
+        v.appendChild(el('b', s[1], 'Panel verdict: ' + s[1]));
+        v.appendChild(el('span', 'why', ' — "' + s[2] + '"'));
+        line.appendChild(v);
+        await wait(700);
+      }
+      var end = el('div', 'ln');
+      end.appendChild(document.createTextNode('Try it yourself: '));
+      var a = el('a', '', 'pipx run panel-firewall demo');
+      a.href = '#install';
+      end.appendChild(a);
+      end.appendChild(document.createTextNode('  '));
+      var again = el('a', 'term-replay', '↻ replay');
+      again.href = '#demo';
+      again.addEventListener('click', function (e) { e.preventDefault(); play(); });
+      end.appendChild(again);
+      body.appendChild(end);
+    }
+    function start() { if (!started) { started = true; play(); } }
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es, o) {
+        if (es[0].isIntersecting) { o.disconnect(); start(); }
+      }, { threshold: 0.4 }).observe(body);
+    } else start();
+  })();
+  </script>
+</div></section>
+
   <div class="tracks">
     <div class="track dev">
       <p class="eyebrow">For developers</p>
