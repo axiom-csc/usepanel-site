@@ -46,10 +46,50 @@ export const pages = [
     hero: true,
     body: `
 <div class="hero"><div class="in">
-  <h1>An action firewall for AI agents<span class="dot">.</span></h1>
-  <p class="lede">Panel sits between an agent and its tools. Every action is checked against your policy in code, held for a human when it should be, and logged with a signed receipt. Every decision is made by plain code you can read.</p>
-  <div class="cta"><a class="btn" href="/evals">See the results</a><a class="btn ghost" href="/how-it-works">How it works</a></div>
+  <h1>Stop your AI agent from doing things it shouldn&rsquo;t<span class="dot">.</span></h1>
+  <p class="lede">Panel holds risky actions for human approval before they execute. Every decision is logged and signed.</p>
+  <div class="cta"><a class="btn" href="#install">Try it now</a><a class="btn ghost" href="#explainer">See how it works</a></div>
 </div></div>
+
+<section id="install"><div class="wrap">
+  <div class="tracks">
+    <div class="track dev">
+      <p class="eyebrow">For developers</p>
+      <h2>Put a proxy in front of your MCP server</h2>
+      <pre class="qs"><code>pipx install panel-firewall</code></pre>
+      <pre class="qs"><code>usepanel init
+usepanel proxy --shadow
+usepanel report --since 48h</code></pre>
+      <p class="small">Needs Python 3.11+. Run <code>usepanel keygen</code> and <code>usepanel pin set</code> first: Panel will not start without a signing key and an approval PIN. Shadow mode lets every call run and records what Panel would have blocked or held; it protects nothing until you remove the flag yourself. <code>init</code> drafts a starter policy: review it.</p>
+      <p class="mono-line">Default-deny MCP proxy, deterministic policy, sqlglot SQL parsing, Ed25519 signed receipts</p>
+      <p class="small"><strong>New in 0.3.0:</strong> <code>usepanel init --cloud</code> signs in through your browser (no API key to copy), policy templates start in the dashboard, and a held action emails you Approve and Deny links that expire after an hour.</p>
+      <p class="links"><a href="https://github.com/tenthlook/panel-firewall">GitHub &rarr;</a><a href="/how-it-works">Docs &rarr;</a></p>
+    </div>
+    <div class="track team">
+      <p class="eyebrow">For your team</p>
+      <h2>Your agent wants to refund $500. Panel holds it and asks you first.</h2>
+      <figure class="approval" aria-label="Illustration of an approval card">
+        <div class="ac-head"><span class="ac-pill">Waiting for approval</span><span class="ac-time">expires in 58 min</span></div>
+        <p class="ac-title">Refund $500.00</p>
+        <p class="ac-meta">Support agent &middot; order #1042 &middot; over the $100 refund limit</p>
+        <div class="ac-btns"><span class="btn">Approve</span><span class="btn ghost">Deny</span></div>
+        <figcaption>Illustration, not a screenshot.</figcaption>
+      </figure>
+      <p class="big">Set rules in plain English. Get email alerts. Approve from your phone.</p>
+      <p class="links"><a class="btn" href="https://app.usepanel.dev">Sign up for the dashboard</a></p>
+    </div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2 class="center">Why you can trust it</h2>
+  <div class="stats">
+    <div class="stat"><b>39 &rarr; 0</b><span>In testing: approval bypasses dropped from 39 to 0. <em>Real gpt-4.1 agents, with and without Panel.</em></span></div>
+    <div class="stat"><b>0.36 ms</b><span>Median overhead per check. Your agent doesn&rsquo;t slow down.</span></div>
+    <div class="stat"><b>643</b><span>Open source, 643 passing tests, every decision signed and verifiable.</span></div>
+  </div>
+  <p class="center small" style="margin-top:20px">Sandbox backends, one author, small samples. <a href="/evals">Full results and limits &rarr;</a></p>
+</div></section>
 
 <section><div class="wrap">
   <h2 class="center">What we measured</h2>
@@ -65,20 +105,7 @@ export const pages = [
   <p class="center small" style="margin-top:20px">Sandbox backends, one author, small samples. <a href="/evals">Full results and limits &rarr;</a></p>
 </div></section>
 
-<section><div class="wrap">
-  <h2 class="center">Try it in shadow mode</h2>
-  <p class="center small" style="max-width:62ch;margin:0 auto">Shadow mode lets every call run and records what Panel would have blocked or held. It protects nothing until you remove the flag yourself.</p>
-  <pre class="qs"><code>pipx install panel-firewall
-usepanel keygen
-usepanel pin set
-usepanel init
-usepanel proxy --shadow</code></pre>
-  <p class="center small">Needs Python 3.11+. <code>usepanel keygen</code> and <code>usepanel pin set</code> create the receipt-signing key and your approval PIN; Panel will not start without them. <code>usepanel init</code> drafts a starter policy from your upstream MCP server: review it. Then <code>usepanel report --since 48h</code> shows what would have happened.</p>
-  <p class="center small"><strong>New in 0.3.0:</strong> <code>usepanel init --cloud</code> signs this machine in through your browser, so there is no API key to copy. In the dashboard you can start a policy from a template (E-commerce agent, Support bot, Data analyst), and a held action emails you Approve and Deny links that expire after an hour.</p>
-  <p class="center small">Prefer a dashboard to a terminal? <a href="https://app.usepanel.dev">app.usepanel.dev</a> gives you the same policy, approvals and events, with no local report command to run.</p>
-</div></section>
-
-<section><div class="wrap">
+<section id="explainer"><div class="wrap">
   <h2 class="center">How it works</h2>
   <ol class="steps grid c3" style="margin-top:32px">
     <li class="card"><span class="num">1</span><h3>Check</h3><p>Each tool call is checked against your written policy, by code, before anything runs. Unknown tools and engine errors are blocked.</p></li>
