@@ -74,6 +74,7 @@ usepanel pin set
 usepanel init
 usepanel proxy --shadow</code></pre>
   <p class="center small">Needs Python 3.11+. <code>usepanel keygen</code> and <code>usepanel pin set</code> create the receipt-signing key and your approval PIN; Panel will not start without them. <code>usepanel init</code> drafts a starter policy from your upstream MCP server: review it. Then <code>usepanel report --since 48h</code> shows what would have happened.</p>
+  <p class="center small"><strong>New in 0.3.0:</strong> <code>usepanel init --cloud</code> signs this machine in through your browser, so there is no API key to copy. In the dashboard you can start a policy from a template (E-commerce agent, Support bot, Data analyst), and a held action emails you Approve and Deny links that expire after an hour.</p>
   <p class="center small">Prefer a dashboard to a terminal? <a href="https://app.usepanel.dev">app.usepanel.dev</a> gives you the same policy, approvals and events, with no local report command to run.</p>
 </div></section>
 
