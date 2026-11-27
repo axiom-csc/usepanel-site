@@ -41,13 +41,13 @@ export const EARLY = mail('Panel early access');
 export const pages = [
   {
     path: '/',
-    title: 'Panel: An action firewall for AI agents',
-    desc: 'Panel sits between AI agents and their tools. Every action is checked against your policy in code, held for a human when it should be, and logged with a signed receipt. Measured on gpt-4.1: 39 actions without approval became 0.',
+    title: 'Panel: Authorization & signed receipts for AI agents',
+    desc: 'Panel sits between AI agents and their tools. Every action is checked against your policy in code, held for human co-signing when it should be, and logged with a signed receipt. Measured on gpt-4.1: 39 actions without approval became 0.',
     hero: true,
     body: `
 <div class="hero"><div class="in">
   <h1>Stop your AI agent from doing things it shouldn&rsquo;t<span class="dot">.</span></h1>
-  <p class="lede">Panel holds risky actions for human approval before they execute. Every decision is logged and signed.</p>
+  <p class="lede">Panel holds risky actions for human co-signing before they execute. Every decision is logged and signed.</p>
   <div class="cta"><a class="btn" href="#install">Try it now</a><a class="btn ghost" href="#explainer">See how it works</a></div>
 </div></div>
 
@@ -162,7 +162,7 @@ usepanel report --since 48h</code></pre>
         <div class="ac-btns"><span class="btn">Approve</span><span class="btn ghost">Deny</span></div>
         <figcaption>Illustration, not a screenshot.</figcaption>
       </figure>
-      <p class="big">Set rules in plain English. Get email alerts. Approve from your phone.</p>
+      <p class="big">Set execution mandates in plain English. Get email alerts. Approve from your phone.</p>
       <p class="links"><a class="btn" href="https://app.usepanel.dev">Sign up for the dashboard</a></p>
     </div>
   </div>
@@ -256,7 +256,7 @@ usepanel report --since 48h</code></pre>
 <p>On 940 real gpt-4.1 / gpt-4.1-mini task-runs, with and without Panel: actions that need a human and ran with none, 39 &rarr; 0; actions the policy forbids that executed anyway, 67 &rarr; 5 (the 5 are scoring artifacts, explained on <a href="/evals">/evals</a>); median overhead per check, including the ledger write and signature, ~0.36&nbsp;ms. Full numbers, methodology and limits on <a href="/evals">/evals</a>.</p>
 
 <h2>There's also a support-bot guard</h2>
-<p>Separately from the MCP action firewall above, Panel checks what a customer-support bot says and does against a store policy &mdash; a different proxy, in front of a model endpoint rather than an MCP server. Those results are the second section of <a href="/evals">/evals</a>.</p>
+<p>Separately from the MCP authorization layer above, Panel checks what a customer-support bot says and does against a store policy &mdash; a different proxy, in front of a model endpoint rather than an MCP server. Those results are the second section of <a href="/evals">/evals</a>.</p>
 
 <div class="cta" style="justify-content:flex-start"><a class="btn" href="${APPLY}">Apply as a design partner</a><a class="btn ghost" href="/security">Security</a></div>
 </div></section>
@@ -266,13 +266,13 @@ usepanel report --since 48h</code></pre>
   {
     path: '/evals',
     title: 'Evals',
-    desc: 'Action firewall results on real gpt-4.1 agents (940 task-runs), the scoring artifacts, the claim blocker, latency, and the earlier support-bot results, with every limit.',
+    desc: 'Authorization layer results on real gpt-4.1 agents (940 task-runs), the scoring artifacts, the claim blocker, latency, and the earlier support-bot results, with every limit.',
     body: `
 <div class="narrow page-head"><p class="eyebrow">Evals</p><h1 class="page-h1">Results so far</h1>
-<p class="lede" style="margin-left:0">Two sections: the action firewall on real models, then the support-bot guard. Every test was written and hashed before it ran, by the same person who wrote the rules, so treat these as early numbers. The limits are listed at the end of each section.</p></div>
+<p class="lede" style="margin-left:0">Two sections: the authorization layer on real models, then the support-bot guard. Every test was written and hashed before it ran, by the same person who wrote the rules, so treat these as early numbers. The limits are listed at the end of each section.</p></div>
 
 <section><div class="narrow prose">
-<h2 id="firewall">1. Action firewall, real models</h2>
+<h2 id="firewall">1. Authorization layer, real models</h2>
 <p>gpt-4.1 and gpt-4.1-mini, 47 tasks &times; 5 samples &times; with and without Panel: 940 task-runs. Tools were sandbox backends (mock Stripe, SQLite, a Shopify-style store). Scoring was frozen before the run and read from the backends, not from what the model said. Total spend was $1.39.</p>
 <div class="tbl"><table>
 <thead><tr><th>Task-runs (gpt-4.1)</th><th class="n">Without Panel</th><th class="n">With Panel</th></tr></thead>
@@ -392,7 +392,7 @@ usepanel report --since 48h</code></pre>
   {
     path: '/pricing',
     title: 'Pricing',
-    desc: 'Free, Agency $299 a month, Startup $899 a month, and Enterprise. Every plan includes all of Panel’s safety features. The first 10 agencies get $249 a month for 12 months.',
+    desc: 'Free, Agency $299 a month, Startup $899 a month, and Enterprise. Every plan includes all of Panel’s enforcement features. The first 10 agencies get $249 a month for 12 months.',
     body: `
 <div class="narrow page-head center"><p class="eyebrow">Pricing</p><h1 class="page-h1">Every plan gets the same checks</h1>
 <p class="lede" style="margin-left:auto;margin-right:auto">What changes between plans is how many clients you can manage and how much history you keep. Free gets the same checks as Enterprise.</p></div>
@@ -400,9 +400,9 @@ usepanel report --since 48h</code></pre>
 <section><div class="wrap">
 <div class="plans">
   <div class="card plan">
-    <h2>Free</h2><p class="price"><b>$0</b></p><p class="small">The local firewall plus one cloud workspace.</p>
+    <h2>Free</h2><p class="price"><b>$0</b></p><p class="small">The local authorization layer plus one cloud workspace.</p>
     <ul class="plan-list">
-      <li>The local firewall, open source (MIT)</li><li>1 cloud workspace</li><li>Shadow mode and enforcement</li><li>7 days of history in the dashboard</li>
+      <li>The local authorization layer, open source (MIT)</li><li>1 cloud workspace</li><li>Shadow mode and enforcement</li><li>7 days of history in the dashboard</li>
     </ul>
     <a class="btn ghost" href="https://app.usepanel.dev/#/signup">Start free</a>
   </div>
@@ -447,7 +447,7 @@ usepanel report --since 48h</code></pre>
 </ul>
 <p>Plans only change how many clients you can manage, how far back the dashboard shows, and conveniences like client views, reports, templates, and Slack or email approval links. Your policies, receipts and audit log are never locked behind a plan.</p>
 <h2>Questions</h2>
-<p><strong>Can I try it first?</strong> Yes. The local firewall is free and open source, and Free includes one cloud workspace in shadow mode.</p>
+<p><strong>Can I try it first?</strong> Yes. The local authorization layer is free and open source, and Free includes one cloud workspace in shadow mode.</p>
 <p><strong>Not useful in your first 30 days?</strong> When paid plans open, you can cancel in Settings for a full refund.</p>
 <p><strong>Want to be a design partner instead?</strong> See <a href="/design-partners">design partners</a>.</p>
 <div class="cta" style="justify-content:flex-start"><a class="btn" href="${APPLY_FOUNDING('Agency')}">Apply for founding pricing</a><a class="btn ghost" href="${mail('Panel pricing question')}">Ask a question</a></div>
