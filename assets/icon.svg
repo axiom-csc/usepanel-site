@@ -1,15 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-770 -770 1540 1540">
-  <style>@media (prefers-color-scheme:dark){circle.m{fill:#FFFFFF}ellipse.m{stroke:#FFFFFF}}</style>
-  <defs>
-    <mask id="m-planet" maskUnits="userSpaceOnUse" x="-1200" y="-1200" width="2400" height="2400">
-      <rect x="-1200" y="-1200" width="2400" height="2400" fill="#fff"/>
-      <path d="M-740 0A740 205 0 0 0 740 0" fill="none" stroke="#000" stroke-width="110" transform="rotate(-31.3)"/>
-    </mask>
-    <mask id="m-ring" maskUnits="userSpaceOnUse" x="-1200" y="-1200" width="2400" height="2400">
-      <rect x="-1200" y="-1200" width="2400" height="2400" fill="#fff"/>
-      <circle r="452" fill="#000"/>
-    </mask>
-  </defs>
-  <circle class="m" r="400" fill="#111111" mask="url(#m-planet)"/>
-  <ellipse class="m" rx="800" ry="250" fill="none" stroke="#111111" stroke-width="130" mask="url(#m-ring)" transform="rotate(-31.3)"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img"><rect width="64" height="64" rx="14" fill="#0b0d14"/><title>Panel</title><rect x="32" y="12.5" width="27.6" height="27.6" rx="3" transform="rotate(45 32 12.5)" fill="#1a56db"/><circle cx="32" cy="32" r="7" fill="#fff"/></svg>
